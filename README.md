@@ -1,15 +1,15 @@
 # Angular Socket.IO IM Demo
 
-A simple instant messaging app to demo the [AngularJS Socket.IO Seed](https://github.com/btford/angular-socket-io-seed). [A walkthrough of writing the application is available on my blog](http://briantford.com/blog/angular-socket-io.html).
+Exemplo de aplicação usando Socket.Io e Angular.
 
 ## Running it
 
-First, grab the dependencies with npm:
+Primeiro instalar as dependências:
 
     npm install
 
-Then run the app like so:
+E para rodar a aplicação:
 
     node app.js
 
-And navigate to `localhost:3000`
+No navegador digite `localhost:3000`
