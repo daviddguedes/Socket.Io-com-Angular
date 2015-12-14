@@ -1,0 +1,50 @@
+extends layout
+
+block section
+
+  .container-fluid
+    
+    div(ng-controller='VotacaoCtrl')
+      .row
+        .col-md-4
+          div(class='musicas-left', ng-repeat='a in artista')
+            .media(class='item-musica-left' , ng-repeat='musica in a.musicas')
+              div(class='media-body')
+                h5 {{ musica.titulo }}
+                p {{ musica.autor }} - {{ musica.ano }}
+              div(class='media-right media-middle')
+                a(class='btn btn-danger', ng-click='musicaVotada(musica)') Votar
+  
+        .col-md-4          
+          div(class='panel panel-default')
+            .panel-heading
+              h4 Acompanhe aqui a votação
+            .panel-body
+              ul(class='list-group')
+                li(class="list-group-item", ng-repeat="v in votadas")
+                  h4 {{ v.titulo }} -----> {{ v.votos }}
+              
+        .col-md-4
+          .informacoes-evento
+            h4 Evento: Fim de ano na Globo - Roberto Carlos Especial
+            p Data: 25/12/2015
+            p Local: Rede Globo de Televisão
+            .row
+              .col-md-12
+                div(class='btn-group' , role='button')
+                  button(type='button' class='btn btn-primary') Curtir
+                  button(type='button' class='btn btn-info') Compartilhar
+                .clear
+                .well
+                  ul(class='nav nav-pills nav-stacked')
+                    li 
+                      a(href='' , class='btn btn-danger') Chat
+                    li
+                      a(href='' , class='btn btn-danger') Quiz
+  
+
+  script(src='js/lib/angular/angular.js')
+  script(src='/socket.io/socket.io.js')
+  script(src='js/app.js')
+  script(src='js/services.js')
+  script(src='js/controllers.js')

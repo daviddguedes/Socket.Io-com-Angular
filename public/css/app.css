@@ -1,0 +1,18 @@
+/* app css stylesheet */
+body {
+  background: #999;
+}
+.musicas-left, .informacoes-evento {
+  background: #333;
+  color: #e9e9e9;
+  padding: 0 1em;
+}
+.informacoes-evento {
+  padding: 1em;
+}
+.clear {
+  padding: 1em;
+}
+.item-musica-left {
+  border-bottom: 1px solid #f9f9f9;
+}
