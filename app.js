@@ -1,13 +1,14 @@
-
 /**
  * Module dependencies.
  */
 
+var PORT = 3333;
+
 var express = require('express'),
         routes = require('./routes'),
         socket = require('./routes/socket.js'),
+        Musica = require('./model/musica.js'),
         mongoose = require('mongoose');
-;
 
 var app = module.exports = express.createServer();
 
@@ -60,14 +61,6 @@ io.sockets.on('reconnecting', function (nextRetry) {
 io.sockets.on('reconnect_failed', function () {
     console.log("Socket reconnect failed");
 });
-//Schemas
-var musicaSchema = new mongoose.Schema({
-    nomeMusica: String,
-    votos: Number
-});
-
-//Models
-var Musica = mongoose.model('Musica', musicaSchema);
 
 //Connect mongodb
 mongoose.connect('mongodb://localhost/testeSocket');
@@ -78,7 +71,6 @@ db.once('open', function (callback) {
 });
 
 // Start server
-
-app.listen(3000, function () {
+app.listen(PORT, function () {
     console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 });

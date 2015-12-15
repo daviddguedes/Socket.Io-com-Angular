@@ -47,11 +47,18 @@ var artistasLista = [
     }
 ];
 module.exports = function (socket) {
+    Musica.find({}, function (err, users) {
+        if (err)
+            throw err;
 
+        // object of all the users
+        console.log(users);
+    });
     socket.emit('init', {artistas: artistasLista, votacao: votacaoList});
 
     socket.on('votacao', function (data) {
         console.log('capturando voto em: ' + data.musica);
+
         var nome_musica = data.musica;
         var flag = false;
 
@@ -78,7 +85,7 @@ module.exports = function (socket) {
         }
         console.log('enviando o objeto via broadcast emit "votacao"');
         console.log(votacaoList);
-        socket.emit('votacao', {votacao:votacaoList});
-        socket.broadcast.emit('votacao', {votacao:votacaoList});
+        socket.emit('votacao', {votacao: votacaoList});
+        socket.broadcast.emit('votacao', {votacao: votacaoList});
     });
 };
