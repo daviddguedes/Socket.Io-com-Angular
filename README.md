@@ -13,3 +13,7 @@ E para rodar a aplicação:
     node app.js
 
 No navegador digite `localhost:3000`
+
+DICA: instala o nodemon 
+
+    npm install -g nodemon
