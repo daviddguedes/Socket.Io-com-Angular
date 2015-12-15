@@ -1,12 +1,13 @@
 {
-    "name": "angular-socket-io-im",
-    "version": "0.0.1",
-    "private": true,
-    "dependencies": {
-        "express": "2.5.10",
-        "jade": ">= 0.26.1",
-        "socket.io": ">= 0.9.6",
-        "connect": "*",
-        "mongoose": "*"
-    }
+  "name": "angular-socket-io-im",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "connect": "*",
+    "express": "2.5.10",
+    "jade": ">= 0.26.1",
+    "kerberos": "0.0.17",
+    "mongoose": "*",
+    "socket.io": ">= 0.9.6"
+  }
 }

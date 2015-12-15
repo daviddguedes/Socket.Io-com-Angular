@@ -47,6 +47,9 @@ var artistasLista = [
     }
 ];
 module.exports = function (socket) {
+    
+    var Musica = require('../model/musica.js');
+    
     Musica.find({}, function (err, users) {
         if (err)
             throw err;
