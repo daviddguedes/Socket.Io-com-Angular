@@ -8,12 +8,11 @@ block section
       .row
         .col-md-4
           div(class='musicas-left', ng-repeat='a in artista')
-            .media(class='item-musica-left' , ng-repeat='musica in a.musicas')
               div(class='media-body')
-                h5 {{ musica.titulo }}
-                p {{ musica.autor }} - {{ musica.ano }}
+                h5 {{ a.titulo }}
+                p {{ a.autor }} - {{ a.ano }}
               div(class='media-right media-middle')
-                a(class='btn btn-danger', ng-click='musicaVotada(musica)') Votar
+                a(class='btn btn-danger', ng-click='musicaVotada(a)') Votar
   
         .col-md-4          
           div(class='panel panel-default')

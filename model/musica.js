@@ -1,11 +1,15 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+//dependencia
+var Artista = require('../model/artista.js');
+
 var musicaSchema = new Schema({
-    nomeMusica: String,
-    votos: Number
+    titulo: String,
+    ano: Number,
+    autor: String,
+    votos: Number,
+    artista: {type: Number, ref: 'Artista'}
 });
 
-var Musica = mongoose.model('Musica', musicaSchema);
-
-module.exports = Musica;
+module.exports = mongoose.model('Musica', musicaSchema);

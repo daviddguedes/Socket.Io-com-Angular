@@ -1,94 +1,63 @@
-var votacaoList = [];
-var artistasLista = [
-    {
-        nome: 'Roberto Carlos',
-        musicas: [
-            {
-                titulo: 'Detalhes',
-                ano: '1984',
-                autor: 'Roberto Carlos'
-            },
-            {
-                titulo: 'Como é grande o meu amor',
-                ano: '1986',
-                autor: 'Roberto Carlos'
-            },
-            {
-                titulo: 'O Calhambeque',
-                ano: '1979',
-                autor: 'Erasmo Carlos'
-            },
-            {
-                titulo: 'Estrada de Santos',
-                ano: '1976',
-                autor: 'Roberto Carlos'
-            },
-            {
-                titulo: 'Debaixo dos caracóis',
-                ano: '1974',
-                autor: 'Roberto Carlos'
-            },
-            {
-                titulo: 'O Terço',
-                ano: '1986',
-                autor: 'Roberto Carlos'
-            },
-            {
-                titulo: 'Mulher de 40',
-                ano: '1994',
-                autor: 'Roberto Carlos'
-            },
-            {
-                titulo: 'Amigo',
-                ano: '1979',
-                autor: 'Roberto Carlos e Erasmo Carlos'
-            }
-        ]
-    }
-];
-module.exports = function (socket) {
-    
-    var Musica = require('../model/musica.js');
-    
-    Musica.find({}, function (err, users) {
-        if (err)
-            throw err;
+var async = require('async');
 
-        // object of all the users
-        console.log(users);
+module.exports = function (socket) {
+    console.log('iniciando o socket no servidor');
+    var Musica = require('../model/musica.js');
+    var Artista = require('../model/artista.js');
+    var artistasList = [];
+    var votacaoList = [];
+
+    async.parallel({
+        artistas: function (callback) {
+            Artista.find({}, function (err, docs) {
+                callback(err, docs);
+            });
+        },
+        musicas: function (callback) {
+            Musica.find({}, function (err, docs) {
+                callback(err, docs);
+            });
+        }
+    }, function (e, r) {
+
+        artistasList = r.musicas;
+
+        for (var m = 0; m < r.musicas.length; m++) {
+            var musica = r.musicas[m];
+            votacaoList.push({titulo: musica.titulo, votos: musica.votos});
+        }
+
+        socket.emit('init', {artistas: artistasList, votacao: votacaoList});
     });
-    socket.emit('init', {artistas: artistasLista, votacao: votacaoList});
+
 
     socket.on('votacao', function (data) {
         console.log('capturando voto em: ' + data.musica);
 
-        var nome_musica = data.musica;
-        var flag = false;
+        Musica.findOneAndUpdate({titulo: data.musica}, {$inc: {votos: 1}})
+                .exec(function (err) {
+                    if (err) {
+                        throw err;
+                    }
 
-        if (votacaoList.length === 0) {
-            votacaoList.push({titulo: nome_musica, votos: 1});
-        } else {
-            for (var i = 0; i < votacaoList.length; i++) {
-                var elemento = votacaoList[i];
-                if (elemento.titulo == nome_musica) {
-                    var v = elemento.votos + 1;
-                    var el = {titulo: elemento.titulo, votos: v};
-                    votacaoList.splice(votacaoList.indexOf(elemento), 1);
-                    votacaoList.push(el);
-                    votacaoList.sort(function (a, b) {
-                        return b.votos - a.votos;
+                    Musica.find({}, function (err, musicas) {
+                        if (err) {
+                            throw err;
+                        }
+                        
+                        var votacaoList = [];
+
+                        for (var m = 0; m < musicas.length; m++) {
+                            var musica = musicas[m];
+                            votacaoList.push({titulo: musica.titulo, votos: musica.votos});
+                        }
+
+                        console.log('enviando o objeto via broadcast emit "votacao"');
+                        //console.log(votacaoList);
+                        socket.emit('votacao', {votacao: votacaoList});
+                        socket.broadcast.emit('votacao', {votacao: votacaoList});
                     });
-                    flag = true;
-                    break;
-                }
-            }
-            if (!flag) {
-                votacaoList.push({titulo: nome_musica, votos: 1});
-            }
-        }
-        console.log('enviando o objeto via broadcast emit "votacao"');
-        console.log(votacaoList);
-        socket.emit('votacao', {votacao: votacaoList});
-        socket.broadcast.emit('votacao', {votacao: votacaoList});
+
+                });
     });
-};
+}

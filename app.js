@@ -7,8 +7,11 @@ var PORT = 3333;
 var express = require('express'),
         routes = require('./routes'),
         socket = require('./routes/socket.js'),
-        Musica = require('./model/musica.js'),
         mongoose = require('mongoose');
+
+var SampleData = require('./model/sample-data.js');
+var Musica = require('./model/musica.js');
+var Artista = require('./model/artista.js');
 
 var app = module.exports = express.createServer();
 
@@ -63,11 +66,48 @@ io.sockets.on('reconnect_failed', function () {
 });
 
 //Connect mongodb
-mongoose.connect('mongodb://localhost/testeSocket');
+mongoose.connect('mongodb://localhost/testeSocket8');
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'conexao com mongodb error:'));
 db.once('open', function (callback) {
     console.log('conexao com mongodb realizada com sucesso');
+
+    //populando o banco se nao houver dados
+    Artista.find({}, function (err, artistas) {
+        if (err)
+            throw err;
+
+        if (artistas.length === 0) {
+
+            var novoArtista = Artista({
+                nome: SampleData[0].nome
+            });
+
+            novoArtista.save(function (err, artista) {
+                if (err)
+                    throw err;
+                
+                for (var m = 0; m < SampleData[0].musicas.length; m++) {
+                    var musica = SampleData[0].musicas[m];
+
+                    var novaMusica = Musica({
+                        titulo: musica.titulo,
+                        ano: musica.ano,
+                        autor: musica.autor,
+                        votos: 0,
+                        artista: artista._id
+                    });
+                    
+                    console.log(novaMusica);
+
+                    novaMusica.save(function (err) {
+                        if (err)
+                            throw err;
+                    });
+                }
+            });
+        }
+    });
 });
 
 // Start server

@@ -8,6 +8,7 @@
     "jade": ">= 0.26.1",
     "kerberos": "0.0.17",
     "mongoose": "*",
-    "socket.io": ">= 0.9.6"
+    "socket.io": ">= 0.9.6",
+    "async": "*"
   }
 }
